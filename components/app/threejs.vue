@@ -9,8 +9,8 @@
 
 <script>
   import * as THREE from 'three';
-  import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-  import { AmmoPhysics, ExtendedMesh, PhysicsLoader } from '@enable3d/ammo-physics';
+  import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+  import { PhysicsLoader } from '@enable3d/ammo-physics';
 
   export default {
     data() {
@@ -23,8 +23,8 @@
         PhysicsLoader('/ammo', () => {
           const threejsAnimation = () => {
             this.parentCall('onUpdate');
-            requestAnimationFrame(threejsAnimation);
             renderer.render(scene, camera);
+            requestAnimationFrame(threejsAnimation);
           };
 
           // Size
@@ -32,14 +32,17 @@
           let height = this.$el.offsetHeight;
 
           // Renderer
-          let renderer = new THREE.WebGLRenderer( { antialias: true } );
+          let renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            canvas: this.$refs.canvas,
+          });
           renderer.setSize(width, height);
           renderer.setAnimationLoop(threejsAnimation);
-          this.$refs.canvas.replaceWith(renderer.domElement);
+          // this.$refs.canvas.replaceWith(renderer.domElement);
           let canvas = this.$refs.canvas;
           
           // Camera
-          let camera = new THREE.PerspectiveCamera( 70, width / height, 0.01, 10 );
+          let camera = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
           camera.position.x = 5;
           camera.position.y = 5;
           camera.position.z = 5;
@@ -56,7 +59,7 @@
           new OrbitControls(camera, this.$el);
 
           // Grid Helper
-          const gridHelper = new THREE.GridHelper( 400, 40, 0x0000ff, 0x808080 );
+          const gridHelper = new THREE.GridHelper();
           scene.add( gridHelper );
 
           // Default object
